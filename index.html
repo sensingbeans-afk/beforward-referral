@@ -51,7 +51,7 @@
       <p data-i18n="hero_subtitle" class="text-2xl font-medium mb-6">Get $15 OFF your next vehicle with my referral</p>
       
       <div class="max-w-md mx-auto bg-white text-gray-900 rounded-3xl p-8 shadow-xl">
-        <p data-i18n="referral_code_label" class="uppercase text-xs tracking-widest font-semibold text-orange-500 mb-2">Your Referral Code</p>
+        <p data-i18n="referral_code_label" class="uppercase text-xs tracking-widest font-semibold text-orange-500 mb-2">Your Referral Code (BFS ID)</p>
         
         <div class="flex items-center justify-center gap-4">
           <span id="referral-code" class="text-5xl font-mono font-bold tracking-widest">3681254</span>
@@ -65,36 +65,50 @@
     </div>
   </section>
 
-  <!-- INSTRUCTIONS (fully static English) -->
+  <!-- INSTRUCTIONS - NEW COMPACT LAYOUT -->
   <section class="max-w-5xl mx-auto px-6 py-16">
     <div class="text-center mb-12">
       <h2 data-i18n="instructions_title" class="text-4xl font-semibold mb-3">How to use your $15 discount</h2>
       <p data-i18n="instructions_subtitle" class="text-xl text-gray-600">Follow these 3 simple steps</p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-8">
+    <!-- Compact 3 Steps (vertical & space-efficient) -->
+    <div class="max-w-2xl mx-auto space-y-10">
       <!-- Step 1 -->
-      <div class="bg-white rounded-3xl p-8 text-center shadow hover:shadow-xl transition">
-        <img src="assets/screenshots/step1.png" alt="Step 1 - Choose your car on BE FORWARD" 
-             class="mx-auto mb-6 rounded-2xl shadow">
-        <h3 data-i18n="step1_title" class="text-2xl font-semibold mb-2">Step 1</h3>
-        <p data-i18n="step1_desc" class="text-gray-600">Go to beforward.jp and choose your car</p>
+      <div class="flex gap-6">
+        <div class="flex-shrink-0 w-10 h-10 bg-orange-500 text-white rounded-2xl flex items-center justify-center text-2xl font-semibold shadow-inner">1</div>
+        <div class="flex-1">
+          <h3 data-i18n="step1_title" class="text-2xl font-semibold mb-2">Step 1</h3>
+          <p data-i18n="step1_desc" class="text-lg text-gray-600">Go to beforward.jp and choose your car</p>
+        </div>
       </div>
 
       <!-- Step 2 -->
-      <div class="bg-white rounded-3xl p-8 text-center shadow hover:shadow-xl transition">
-        <img src="assets/screenshots/step2.jpg" alt="Step 2 - Enter BFS ID on order page" 
-             class="mx-auto mb-6 rounded-2xl shadow">
-        <h3 data-i18n="step2_title" class="text-2xl font-semibold mb-2">Step 2</h3>
-        <p data-i18n="step2_desc" class="text-gray-600">On the order / inquiry page, find the BFS ID field</p>
+      <div class="flex gap-6">
+        <div class="flex-shrink-0 w-10 h-10 bg-orange-500 text-white rounded-2xl flex items-center justify-center text-2xl font-semibold shadow-inner">2</div>
+        <div class="flex-1">
+          <h3 data-i18n="step2_title" class="text-2xl font-semibold mb-2">Step 2</h3>
+          <p data-i18n="step2_desc" class="text-lg text-gray-600">On the order / inquiry page, find the BFS ID field</p>
+        </div>
       </div>
 
       <!-- Step 3 -->
-      <div class="bg-white rounded-3xl p-8 text-center shadow hover:shadow-xl transition">
-        <img src="assets/screenshots/step3.png" alt="Step 3 - Paste code and get discount" 
-             class="mx-auto mb-6 rounded-2xl shadow">
-        <h3 data-i18n="step3_title" class="text-2xl font-semibold mb-2">Step 3</h3>
-        <p data-i18n="step3_desc" class="text-gray-600">Paste your code and click Apply — $15 discount is automatic</p>
+      <div class="flex gap-6">
+        <div class="flex-shrink-0 w-10 h-10 bg-orange-500 text-white rounded-2xl flex items-center justify-center text-2xl font-semibold shadow-inner">3</div>
+        <div class="flex-1">
+          <h3 data-i18n="step3_title" class="text-2xl font-semibold mb-2">Step 3</h3>
+          <p data-i18n="step3_desc" class="text-lg text-gray-600">Paste your code and click Apply — $15 discount is automatic</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Single Screenshot - Visual Guide (placed AFTER the 3 steps) -->
+    <div class="mt-20">
+      <h3 class="text-3xl font-semibold text-center mb-8">Visual Guide</h3>
+      <div class="max-w-4xl mx-auto bg-white p-6 rounded-3xl shadow-2xl">
+        <img src="assets/screenshots/step2.jpg" 
+             alt="BE FORWARD $15 discount referral steps visual guide"
+             class="w-full rounded-2xl shadow">
       </div>
     </div>
   </section>
@@ -105,12 +119,11 @@
   </footer>
 
   <script>
-    const REFERRAL_CODE = "3681254";
+    const REFERRAL_CODE = "3681254";   // ←←← CHANGE THIS TO YOUR REAL BFS ID
 
     const languages = [
       { code: "en", name: "English", flag: "🇬🇧", file: "i18n/en.json" },
       { code: "de", name: "Deutsch", flag: "🇩🇪", file: "i18n/de.json" }
-      // Add more languages here later — no other code changes needed
     ];
 
     let currentLang = "en";
@@ -122,15 +135,9 @@
 
       try {
         const res = await fetch(lang.file);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        
         translations = await res.json();
         currentLang = langCode;
-
-        // Update the dropdown button
-        document.getElementById("current-lang").innerHTML = 
-          `${lang.flag} <span class="font-medium">${lang.name}</span>`;
-
+        document.getElementById("current-lang").innerHTML = `${lang.flag} ${lang.name}`;
         applyTranslations();
       } catch (e) {
         console.error("Failed to load language", e);
@@ -158,81 +165,38 @@
       });
     };
 
-    // Single source of truth: renders the scrollable list (full or filtered)
-    function renderLanguageList(query = '') {
-      const list = document.getElementById("lang-list");
-      list.innerHTML = "";
-
-      const q = query.toLowerCase().trim();
-
-      languages.forEach(lang => {
-        if (lang.name.toLowerCase().includes(q)) {
-          const isCurrent = lang.code === currentLang;
-
-          const div = document.createElement("div");
-          div.className = `px-4 py-3 hover:bg-orange-50 cursor-pointer flex items-center gap-3 transition-colors ${
-            isCurrent ? 'bg-orange-100 font-medium' : ''
-          }`;
-          
-          div.innerHTML = `
-            <span class="text-xl">${lang.flag}</span>
-            <span class="flex-1">${lang.name}</span>
-            ${isCurrent ? `<span class="ml-auto text-orange-500">✓</span>` : ''}
-          `;
-
-          // Clean click handling with stopPropagation
-          div.addEventListener("click", (e) => {
-            e.stopPropagation();                    // prevents outside-click handler
-            document.getElementById("lang-menu").classList.add("hidden");
-            loadLanguage(lang.code);
-          });
-
-          list.appendChild(div);
-        }
-      });
-
-      if (list.children.length === 0) {
-        const empty = document.createElement("div");
-        empty.className = "px-4 py-6 text-center text-gray-500 text-sm";
-        empty.textContent = "No languages found";
-        list.appendChild(empty);
-      }
-    }
-
     window.toggleLanguageMenu = function() {
       const menu = document.getElementById("lang-menu");
-      const searchInput = document.getElementById("lang-search");
-      const wasHidden = menu.classList.contains("hidden");
-
       menu.classList.toggle("hidden");
-
-      if (wasHidden) {
-        // Menu just opened → show full list immediately
-        searchInput.value = "";
-        renderLanguageList("");
-        searchInput.focus();
-      }
+      document.getElementById("lang-search").focus();
     };
 
     window.filterLanguages = function() {
-      const query = document.getElementById("lang-search").value;
-      renderLanguageList(query);
+      const query = document.getElementById("lang-search").value.toLowerCase();
+      const list = document.getElementById("lang-list");
+      list.innerHTML = "";
+
+      languages.forEach(lang => {
+        if (lang.name.toLowerCase().includes(query)) {
+          const div = document.createElement("div");
+          div.className = "px-4 py-3 hover:bg-orange-50 cursor-pointer flex items-center gap-3";
+          div.innerHTML = `<span>${lang.flag}</span><span>${lang.name}</span>`;
+          div.onclick = () => {
+            document.getElementById("lang-menu").classList.add("hidden");
+            loadLanguage(lang.code);
+          };
+          list.appendChild(div);
+        }
+      });
     };
 
-    // Initialize
     window.onload = () => {
       tailwind.config = { content: ["./index.html"] };
+      document.getElementById("current-lang").innerHTML = `🇬🇧 English`;
 
-      // Initial button display
-      document.getElementById("current-lang").innerHTML = `🇬🇧 <span class="font-medium">English</span>`;
-
-      // Close menu when clicking outside (robust version)
       document.addEventListener("click", (e) => {
-        const menu = document.getElementById("lang-menu");
-        if (menu && !menu.classList.contains("hidden")) {
-          if (!e.target.closest(".relative")) {
-            menu.classList.add("hidden");
-          }
+        if (!e.target.closest(".relative")) {
+          document.getElementById("lang-menu").classList.add("hidden");
         }
       });
     };
