@@ -105,11 +105,12 @@
   </footer>
 
   <script>
-    const REFERRAL_CODE = "3681254";   // ←←← CHANGE THIS TO YOUR REAL BFS ID
+    const REFERRAL_CODE = "3681254";
 
     const languages = [
       { code: "en", name: "English", flag: "🇬🇧", file: "i18n/en.json" },
       { code: "de", name: "Deutsch", flag: "🇩🇪", file: "i18n/de.json" }
+      // Add more languages here later — no other code changes needed
     ];
 
     let currentLang = "en";
@@ -121,9 +122,15 @@
 
       try {
         const res = await fetch(lang.file);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
         translations = await res.json();
         currentLang = langCode;
-        document.getElementById("current-lang").innerHTML = `${lang.flag} ${lang.name}`;
+
+        // Update the dropdown button
+        document.getElementById("current-lang").innerHTML = 
+          `${lang.flag} <span class="font-medium">${lang.name}</span>`;
+
         applyTranslations();
       } catch (e) {
         console.error("Failed to load language", e);
@@ -135,7 +142,6 @@
         const key = el.getAttribute("data-i18n");
         if (translations[key]) el.textContent = translations[key];
       });
-      // Update referral code display
       document.getElementById("referral-code").textContent = REFERRAL_CODE;
     }
 
@@ -152,43 +158,81 @@
       });
     };
 
-    window.toggleLanguageMenu = function() {
-      const menu = document.getElementById("lang-menu");
-      menu.classList.toggle("hidden");
-      document.getElementById("lang-search").focus();
-    };
-
-    window.filterLanguages = function() {
-      const query = document.getElementById("lang-search").value.toLowerCase();
+    // Single source of truth: renders the scrollable list (full or filtered)
+    function renderLanguageList(query = '') {
       const list = document.getElementById("lang-list");
       list.innerHTML = "";
 
+      const q = query.toLowerCase().trim();
+
       languages.forEach(lang => {
-        if (lang.name.toLowerCase().includes(query)) {
+        if (lang.name.toLowerCase().includes(q)) {
+          const isCurrent = lang.code === currentLang;
+
           const div = document.createElement("div");
-          div.className = "px-4 py-3 hover:bg-orange-50 cursor-pointer flex items-center gap-3";
-          div.innerHTML = `<span>${lang.flag}</span><span>${lang.name}</span>`;
-          div.onclick = () => {
+          div.className = `px-4 py-3 hover:bg-orange-50 cursor-pointer flex items-center gap-3 transition-colors ${
+            isCurrent ? 'bg-orange-100 font-medium' : ''
+          }`;
+          
+          div.innerHTML = `
+            <span class="text-xl">${lang.flag}</span>
+            <span class="flex-1">${lang.name}</span>
+            ${isCurrent ? `<span class="ml-auto text-orange-500">✓</span>` : ''}
+          `;
+
+          // Clean click handling with stopPropagation
+          div.addEventListener("click", (e) => {
+            e.stopPropagation();                    // prevents outside-click handler
             document.getElementById("lang-menu").classList.add("hidden");
             loadLanguage(lang.code);
-          };
+          });
+
           list.appendChild(div);
         }
       });
+
+      if (list.children.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "px-4 py-6 text-center text-gray-500 text-sm";
+        empty.textContent = "No languages found";
+        list.appendChild(empty);
+      }
+    }
+
+    window.toggleLanguageMenu = function() {
+      const menu = document.getElementById("lang-menu");
+      const searchInput = document.getElementById("lang-search");
+      const wasHidden = menu.classList.contains("hidden");
+
+      menu.classList.toggle("hidden");
+
+      if (wasHidden) {
+        // Menu just opened → show full list immediately
+        searchInput.value = "";
+        renderLanguageList("");
+        searchInput.focus();
+      }
+    };
+
+    window.filterLanguages = function() {
+      const query = document.getElementById("lang-search").value;
+      renderLanguageList(query);
     };
 
     // Initialize
     window.onload = () => {
-      // Tailwind
       tailwind.config = { content: ["./index.html"] };
 
-      // Default is already static English — no need to load en.json on start
-      document.getElementById("current-lang").innerHTML = `🇬🇧 English`;
+      // Initial button display
+      document.getElementById("current-lang").innerHTML = `🇬🇧 <span class="font-medium">English</span>`;
 
-      // Close menu when clicking outside
+      // Close menu when clicking outside (robust version)
       document.addEventListener("click", (e) => {
-        if (!e.target.closest(".relative")) {
-          document.getElementById("lang-menu").classList.add("hidden");
+        const menu = document.getElementById("lang-menu");
+        if (menu && !menu.classList.contains("hidden")) {
+          if (!e.target.closest(".relative")) {
+            menu.classList.add("hidden");
+          }
         }
       });
     };
