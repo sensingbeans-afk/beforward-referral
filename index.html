@@ -88,7 +88,7 @@
         <div class="flex-shrink-0 w-10 h-10 bg-orange-500 text-white rounded-2xl flex items-center justify-center text-2xl font-semibold shadow-inner">2</div>
         <div class="flex-1">
           <h3 data-i18n="step2_title" class="text-2xl font-semibold mb-2">Step 2</h3>
-          <p data-i18n="step2_desc" class="text-lg text-gray-600">On the order / inquiry page, find the BFS ID field</p>
+          <p data-i18n="step2_desc" class="text-lg text-gray-600">On the order / inquiry page, find the <strong>BFS ID</strong> field labeled "Introduced by a BF SUPPORTER?" — do NOT use the "Discount Coupon Code" field</p>
         </div>
       </div>
 
@@ -166,10 +166,18 @@
     };
 
     window.toggleLanguageMenu = function() {
-      const menu = document.getElementById("lang-menu");
-      menu.classList.toggle("hidden");
-      document.getElementById("lang-search").focus();
-    };
+    const menu = document.getElementById("lang-menu");
+    const searchInput = document.getElementById("lang-search");
+    
+    menu.classList.toggle("hidden");
+    
+    if (!menu.classList.contains("hidden")) {
+      // Menu is now visible → populate languages immediately
+      searchInput.value = "";           // clear any previous search
+      searchInput.focus();
+      filterLanguages();                // ← this was missing
+    }
+  };
 
     window.filterLanguages = function() {
       const query = document.getElementById("lang-search").value.toLowerCase();
