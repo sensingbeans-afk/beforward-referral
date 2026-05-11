@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sensingbeans-afk.github.io/beforward-referral/sitemap.xml
