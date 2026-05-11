@@ -3,7 +3,8 @@
   "header_title": "BE FORWARD",
   "lang_label": "Language",
   "hero_subtitle": "Get $15 OFF your next vehicle with my referral",
-  "referral_code_label": "Your Referral Code",
+  "referral_code_label": "Your BFS ID Referral Code (NOT the Discount Code)",
+  "step2_desc": "On the order / inquiry page, find the <strong>BFS ID</strong> field labeled \"Introduced by a BF SUPPORTER?\" — do NOT use the \"Discount Coupon Code\" field",
   "copy_button": "Copy",
   "copied": "Copied!",
   "instructions_title": "How to use your $15 discount",
@@ -11,7 +12,6 @@
   "step1_title": "Step 1",
   "step1_desc": "Go to <a href='https://www.beforward.jp/' target='_blank' rel='noopener noreferrer' class='text-orange-600 hover:underline'>beforward.jp</a> and choose your car",
   "step2_title": "Step 2",
-  "step2_desc": "On the order / inquiry page, find the BFS ID field",
   "step3_title": "Step 3",
   "step3_desc": "Paste your code and click Apply — $15 discount is automatic",
   "footer_note": "Made with ❤️ for BE FORWARD fans"
