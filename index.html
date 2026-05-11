@@ -334,9 +334,58 @@
       if (translations.title) document.title = translations.title;
     }
 
-    window.copyCode = function() { /* unchanged */ };
-    window.toggleLanguageMenu = function() { /* unchanged */ };
-    window.filterLanguages = function() { /* unchanged */ };
+    window.copyCode = function() {
+      navigator.clipboard.writeText(REFERRAL_CODE).then(() => {
+        const btn = document.getElementById("copy-button");
+        const original = btn.textContent;
+        btn.textContent = translations.copied || "Copied!";
+        btn.classList.add("!bg-green-500");
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove("!bg-green-500");
+        }, 2000);
+      });
+    };
+    window.toggleLanguageMenu = function() {
+  const menu = document.getElementById("lang-menu");
+  menu.classList.toggle("hidden");
+
+  // Populate the list every time the menu is opened
+  if (!menu.classList.contains("hidden")) {
+    filterLanguages();
+  }
+};
+
+window.filterLanguages = function() {
+  const query = document.getElementById("lang-search").value.toLowerCase().trim();
+  const langList = document.getElementById("lang-list");
+  langList.innerHTML = "";
+
+  const filtered = languages.filter(lang =>
+    lang.name.toLowerCase().includes(query) ||
+    lang.code.toLowerCase().includes(query)
+  );
+
+  filtered.forEach(lang => {
+    const item = document.createElement("div");
+    item.className = "px-4 py-3 hover:bg-orange-50 cursor-pointer flex items-center gap-3 text-sm";
+    item.innerHTML = `
+      <span class="text-2xl">${lang.flag}</span>
+      <span class="font-medium">${lang.name}</span>
+      <span class="text-xs text-gray-400 ml-auto">${lang.code.toUpperCase()}</span>
+    `;
+    item.onclick = () => {
+      loadLanguage(lang.code);
+      document.getElementById("lang-menu").classList.add("hidden");
+      document.getElementById("lang-search").value = "";
+    };
+    langList.appendChild(item);
+  });
+
+  if (filtered.length === 0) {
+    langList.innerHTML = `<div class="px-6 py-8 text-center text-gray-400">No languages found</div>`;
+  }
+};
 
     window.onload = () => {
       tailwind.config = { content: ["./index.html"] };
